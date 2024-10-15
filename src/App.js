@@ -7,6 +7,7 @@ import Category from './pages/category';
 import Product_page from './pages/product_page';
 import Cart from './pages/cart';
 import Checkout from './pages/checkout';
+import SignIn from './pages/login';
 
 
 function App() {
@@ -14,7 +15,7 @@ function App() {
     <Router>
       
         <Routes>
-          <Route path='/' element={<Login />}/>
+          <Route path='/' element={<SignIn />}/>
           <Route path='/signup' element={<Signup />}/>
           <Route path="/home" element={<Home />} />
           <Route path='/category' element={<Category />}/>
