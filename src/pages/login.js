@@ -122,8 +122,21 @@ function SignIn() {
             borderRadius: '20px',
             boxShadow: '0 0 15px rgba(0, 0, 0, 0.5)',
             position: 'relative', // เพิ่ม position relative
+            margin: 0,
           }}
         >
+        <img
+                src="https://media.discordapp.net/attachments/1130936978519633940/1296119433223208970/image.png?ex=671120c9&is=670fcf49&hm=ec52021c5cb6964ca5ac8112bb3603b97c0789cdf7eee999d97b5e1d4157038a&=&format=webp&quality=lossless&width=915&height=430" // เปลี่ยน URL เป็นรูปภาพที่คุณต้องการใช้
+                alt="Top right image"
+                style={{
+                    position: 'absolute', // จัดให้ภาพอยู่ในตำแหน่งที่แน่นอน
+                    bottom:'350px',
+                    left: '780px', // ตำแหน่งจากด้านซ้าย
+                    width: '366px', // ขนาดความกว้างของรูปภาพ (ปรับได้)
+                    height: '172px', // ขนาดความสูงของรูปภาพ (ปรับได้)
+                }}
+          />
+
           <h1
             style={{
               fontFamily: 'Montserrat, sans-serif',
@@ -216,20 +229,7 @@ function SignIn() {
             </button>
           </div>
 
-          <h3
-            style={{
-              fontFamily: 'Montserrat, sans-serif',
-              fontWeight: 700,
-              fontSize: '17px',
-              marginRight: '60%',
-              marginTop: '35px',
-              color: '#a3181a',
-              cursor: 'pointer'
-            }}
-            onClick={handleForgotPasswordClick} // เมื่อคลิกจะเปลี่ยนกลับไปหน้า Reset password
-          >
-            Forgot your password?
-          </h3>
+
 
 
 
@@ -286,7 +286,7 @@ function SignIn() {
           }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <h3 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: '17px', marginRight: '10px', color: '#a3181a' }}>
-              don't have an account?
+              new to Ku Uniform Hub?
             </h3>
             <h3
               style={{ cursor: 'pointer', fontWeight: 'bold', color: '#292724' }}

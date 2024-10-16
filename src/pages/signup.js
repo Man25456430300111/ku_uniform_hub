@@ -6,14 +6,24 @@ import BaseLayout from './BaseLayout';
 function SignUp() {
 
     //------------------sign up-----------------------
+    const [firstname, setFirstname] = useState(''); // เพิ่ม state สำหรับ Firstname
+    const [lastname, setLastname] = useState(''); // เพิ่ม state สำหรับ Lastname
     const [usernamesignup, setUsernamesignup] = useState('');
     const [passwordsignup, setPasswordsignup] = useState('');
     const [passwordsignup2, setPasswordsignup2] = useState('');
     const [showPasswordsignup, setShowPasswordsignup] = useState(false); // สถานะการแสดงรหัสผ่าน
 
     const navigate = useNavigate(); // ใช้สำหรับเปลี่ยนหน้า
-    const handleSignInClick = () => navigate('/signin'); // ไปหน้า Sign In
+    const handleSignInClick = () => navigate('/'); // ไปหน้า Sign In
 
+
+    const handleFirstnameChange = (e) => {
+        setFirstname(e.target.value);
+    };
+
+    const handleLastnameChange = (e) => {
+        setLastname(e.target.value);
+    };
 
     const handleInputChangesignup = (e) => {
         setUsernamesignup(e.target.value);
@@ -90,9 +100,48 @@ function SignUp() {
                     padding: '35px',
                     borderRadius: '20px',
                     boxShadow: '0 0 15px rgba(0, 0, 0, 0.5)',
-                    position: 'relative' // เพิ่ม position relative
+                    position: 'relative', // เพิ่ม position relative
+                    margin:0,
                 }}>
                     <h1 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 900, fontSize: '28px', marginTop: '0px', color: '#292724' }}>Sign Up</h1>
+
+                    <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: '17px', marginRight: '85%' }}>Firstname:</h2>
+                    <input
+                        type="text"
+                        placeholder="Enter your firstname"
+                        value={firstname}
+                        onChange={handleFirstnameChange}
+                        style={{
+                            padding: '14px',
+                            width: '450px',
+                            fontSize: '17px',
+                            borderRadius: '12px',
+                            fontFamily: 'Montserrat, sans-serif',
+                            backgroundColor: '#F4EEAD',
+                            border: 'none',
+                            outline: 'none'
+                        }}
+                    />
+
+                    <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: '17px', marginRight: '85%', marginTop: '20px' }}>Lastname:</h2>
+                    <input
+                        type="text"
+                        placeholder="Enter your lastname"
+                        value={lastname}
+                        onChange={handleLastnameChange}
+                        style={{
+                            padding: '14px',
+                            width: '450px',
+                            fontSize: '17px',
+                            borderRadius: '12px',
+                            fontFamily: 'Montserrat, sans-serif',
+                            backgroundColor: '#F4EEAD',
+                            border: 'none',
+                            outline: 'none'
+                        }}
+                    />
+
+
                     <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: '17px', marginRight: '90%' }}>Email:</h2>
                     <input
                         type="email"
@@ -108,6 +157,18 @@ function SignUp() {
                             backgroundColor: '#F4EEAD',
                             border: 'none',
                             outline: 'none'
+                        }}
+                    />
+
+                    <img
+                        src="https://media.discordapp.net/attachments/1130936978519633940/1296119433223208970/image.png?ex=671120c9&is=670fcf49&hm=ec52021c5cb6964ca5ac8112bb3603b97c0789cdf7eee999d97b5e1d4157038a&=&format=webp&quality=lossless&width=915&height=430" // เปลี่ยน URL เป็นรูปภาพที่คุณต้องการใช้
+                        alt="Top right image"
+                        style={{
+                        position: 'absolute', // จัดให้ภาพอยู่ในตำแหน่งที่แน่นอน
+                        bottom:'500px',
+                        left: '780px', // ตำแหน่งจากด้านซ้าย
+                        width: '366px', 
+                        height: '172px',
                         }}
                     />
 
