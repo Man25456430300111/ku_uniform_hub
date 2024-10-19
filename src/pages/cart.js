@@ -2,9 +2,10 @@ import React from 'react';
 
 const Cart = () => {
   return (
-    <div>
-      <h1>Welcome to the Cart page! HelloYou</h1>
-    </div>
+    <div className="text-center text-yellow-400">
+      Welcome to the Cart page! HelloYou
+      </div>
+  
   );
 };
 
