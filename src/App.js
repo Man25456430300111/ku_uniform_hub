@@ -8,6 +8,8 @@ import Product_page from './pages/product_page';
 import Cart from './pages/cart';
 import Checkout from './pages/checkout';
 import SignIn from './pages/login';
+import './App.css'; 
+
 
 
 function App() {
