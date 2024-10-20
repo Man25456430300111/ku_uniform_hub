@@ -220,7 +220,7 @@ function SignUp() {
 
                     {/* confirm password */}
 
-                    <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: '17px', marginRight: '67%', marginTop: '20px' }}>Confirm Password:</h2>
+                    <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: '17px', marginRight: '65%', marginTop: '20px' }}>Confirm Password:</h2>
                     <div style={{ position: 'relative', width: '450px' }}>
                         <input
                             type="password" // เปลี่ยนจาก type="text" เป็น type="password"
