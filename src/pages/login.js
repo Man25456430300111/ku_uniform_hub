@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2'
 import BaseLayout from './BaseLayout';
-
+import imageku from './images/image_ku.png';
 import axios from 'axios'
 
 
@@ -125,17 +125,17 @@ function SignIn() {
             margin: 0,
           }}
         >
-        <img
-                src="https://media.discordapp.net/attachments/1130936978519633940/1296119433223208970/image.png?ex=671120c9&is=670fcf49&hm=ec52021c5cb6964ca5ac8112bb3603b97c0789cdf7eee999d97b5e1d4157038a&=&format=webp&quality=lossless&width=915&height=430" // เปลี่ยน URL เป็นรูปภาพที่คุณต้องการใช้
-                alt="Top right image"
-                style={{
-                    position: 'absolute', // จัดให้ภาพอยู่ในตำแหน่งที่แน่นอน
-                    bottom:'350px',
-                    left: '780px', // ตำแหน่งจากด้านซ้าย
-                    width: '366px', // ขนาดความกว้างของรูปภาพ (ปรับได้)
-                    height: '172px', // ขนาดความสูงของรูปภาพ (ปรับได้)
-                }}
-          />
+                     
+        <img src={imageku} 
+          alt="KU Logo" 
+          style={{
+          position: 'absolute', // จัดให้ภาพอยู่ในตำแหน่งที่แน่นอน
+          bottom:'360px',
+          left: '780px', // ตำแหน่งจากด้านซ้าย
+          width: '366px', 
+          height: '172px',
+          }}
+        />
 
           <h1
             style={{
