@@ -1,17 +1,51 @@
 import React, { useState } from 'react';
 import imageku from './images/image_ku.png'; // นำเข้ารูปภาพจากโฟลเดอร์ images
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const Cart = () => {
   const [showModal, setShowModal] = useState(false); // สถานะเปิด/ปิดป๊อปอัพแก้ไขที่อยู่
   const [showPaymentModal, setShowPaymentModal] = useState(false); // สถานะเปิด/ป๊อปอัพการชำระเงิน
-  const [quantity1, setQuantity1] = useState(1); // จำนวนสินค้าชิ้นแรก
-  const [quantity2, setQuantity2] = useState(2); // จำนวนสินค้าชิ้นที่สอง
+  const [items, setItems] = useState([
+    { id: 1, name: "เสื้อโปโล เกษตรศาสตร์ | The One Concept ชุดนักศึกษาพรีเมี่ยม", price: 390, quantity: 1 },
+    { id: 2, name: "เสื้อแขนยาว | The One Concept ชุดนักศึกษาพรีเมี่ยม", price: 490, quantity: 2 }
+  ]);
 
-  const handleIncrement1 = () => setQuantity1(quantity1 + 1);
-  const handleDecrement1 = () => setQuantity1(quantity1 > 1 ? quantity1 - 1 : 1);
+  // เพิ่ม state สำหรับที่อยู่
+  const [address, setAddress] = useState({
+    fullName: "นายสมใจ สมจิตร",
+    phone: "066-666-6666",
+    addressDetail: "66/666 หมู่ 6 ตำบล 6 อำเภอ 6 จังหวัด 66666",
+  });
 
-  const handleIncrement2 = () => setQuantity2(quantity2 + 1);
-  const handleDecrement2 = () => setQuantity2(quantity2 > 1 ? quantity2 - 1 : 1);
+  // เพิ่ม state สำหรับฟอร์มแก้ไข
+  const [editAddress, setEditAddress] = useState({
+    fullName: address.fullName,
+    phone: address.phone,
+    addressDetail: address.addressDetail,
+  });
+
+  const handleIncrement = (id) => {
+    setItems(items.map(item => item.id === id ? { ...item, quantity: item.quantity + 1 } : item));
+  };
+
+  const handleDecrement = (id) => {
+    setItems(items.map(item => item.id === id && item.quantity > 1 ? { ...item, quantity: item.quantity - 1 } : item));
+  };
+
+  const handleRemove = (id) => {
+    setItems(items.filter(item => item.id !== id));
+  };
+
+  const handleAddressChange = (e) => {
+    const { name, value } = e.target;
+    setEditAddress(prevState => ({ ...prevState, [name]: value }));
+  };
+
+  const handleSaveAddress = () => {
+    setAddress(editAddress); // อัปเดตที่อยู่ใหม่
+    setShowModal(false); // ปิดป๊อปอัพหลังจากยืนยัน
+  };
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -57,7 +91,7 @@ const Cart = () => {
 
           <div className="bg-gray-200 p-4 rounded-lg mb-6">
             <p className="font-medium text-gray-800">
-              นายสมใจ สมจิตร เบอร์โทรศัพท์ 066-666-6666 66/666 หมู่ 6 ตำบล 6 อำเภอ 6 จังหวัด 66666
+              {address.fullName} เบอร์โทรศัพท์ {address.phone} {address.addressDetail}
             </p>
             <button
               onClick={() => setShowModal(true)} // แสดงป๊อปอัพแก้ไขที่อยู่
@@ -73,13 +107,30 @@ const Cart = () => {
               <div className="bg-yellow-200 p-8 rounded-lg shadow-lg max-w-3xl w-full grid grid-cols-1 gap-8">
                 <div className="flex flex-col items-center justify-center">
                   <h2 className="text-2xl font-bold mb-4 md:self-start md:ml-[117px]">ช่องทางการติดต่อ</h2>
-                  <input className="w-2/3 p-3 mb-4 rounded-lg bg-white" placeholder="ชื่อ นามสกุล" />
-                  <input className="w-2/3 p-3 mb-4 rounded-lg bg-white" placeholder="หมายเลขโทรศัพท์" />
+                  <input 
+                    className="w-2/3 p-3 mb-4 rounded-lg bg-white" 
+                    name="fullName" 
+                    value={editAddress.fullName} 
+                    onChange={handleAddressChange}
+                    placeholder="ชื่อ นามสกุล" 
+                  />
+                  <input 
+                    className="w-2/3 p-3 mb-4 rounded-lg bg-white" 
+                    name="phone" 
+                    value={editAddress.phone} 
+                    onChange={handleAddressChange}
+                    placeholder="หมายเลขโทรศัพท์" 
+                  />
                   <h2 className="text-2xl font-bold mb-4 md:self-start md:ml-[117px]">ที่อยู่</h2>
-                  <input className="w-2/3 p-3 mb-4 rounded-lg bg-white" placeholder="จังหวัด,เขต/อำเภอ,แถว/ตำบล,รหัสไปรษณีย์" />
-                  <input className="w-2/3 p-3 mb-4 rounded-lg bg-white" placeholder="บ้านเลขที่,ซอย,หมู่บ้าน,แถว/ตำบล" />
+                  <input 
+                    className="w-2/3 p-3 mb-4 rounded-lg bg-white" 
+                    name="addressDetail" 
+                    value={editAddress.addressDetail} 
+                    onChange={handleAddressChange}
+                    placeholder="ที่อยู่"
+                  />
                   <button
-                    onClick={() => setShowModal(false)} // ปิดป๊อปอัพเมื่อกดปุ่ม "ยืนยัน"
+                    onClick={handleSaveAddress} // บันทึกที่อยู่ใหม่
                     className="bg-green-500 text-white w-2/3 p-3 rounded-lg hover:bg-green-600"
                   >
                     ยืนยัน
@@ -91,44 +142,34 @@ const Cart = () => {
 
           {/* รายการสินค้า */}
           <div className="space-y-4">
-            <div className="flex items-center space-x-4">
-              <img className="w-20 h-20 rounded-lg" src="https://via.placeholder.com/150" alt="Product 1" />
-              <div className="flex-1">
-                <h3 className="font-bold text-lg">เสื้อโปโล เกษตรศาสตร์ | The One Concept ชุดนักศึกษาพรีเมี่ยม</h3>
-                <p className="text-gray-700">สี: ขาว | ขนาด: M</p>
-                <p className="text-gray-700">THB 390.00</p>
+            {items.map(item => (
+              <div key={item.id} className="flex items-center space-x-4">
+                <img className="w-20 h-20 rounded-lg" src="https://via.placeholder.com/150" alt={item.name} />
+                <div className="flex-1">
+                  <h3 className="font-bold text-lg">{item.name}</h3>
+                  <p className="text-gray-700">THB {item.price}.00</p>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <button onClick={() => handleDecrement(item.id)}>-</button>
+                  <input type="text" value={item.quantity} readOnly className="text-center w-8" />
+                  <button onClick={() => handleIncrement(item.id)}>+</button>
+                </div>
+                <p className="font-bold">ยอดรวม: THB {item.price * item.quantity}.00</p>
+                {/* ปุ่มลบสินค้า */}
+                <button onClick={() => handleRemove(item.id)} className="text-red-500 hover:text-red-700">
+                  <FontAwesomeIcon icon={faTrash} />
+                </button>
               </div>
-              <div className="flex items-center space-x-2">
-                <button onClick={handleDecrement1}>-</button>
-                <input type="text" value={quantity1} readOnly className="text-center w-8" />
-                <button onClick={handleIncrement1}>+</button>
-              </div>
-              <p className="font-bold">ยอดรวม: THB {390 * quantity1}.00</p>
-            </div>
-
-            <div className="flex items-center space-x-4">
-              <img className="w-20 h-20 rounded-lg" src="https://via.placeholder.com/150" alt="Product 2" />
-              <div className="flex-1">
-                <h3 className="font-bold text-lg">เสื้อแขนยาว | The One Concept ชุดนักศึกษาพรีเมี่ยม</h3>
-                <p className="text-gray-700">สี: ขาว | ขนาด: L</p>
-                <p className="text-gray-700">THB 490.00</p>
-              </div>
-              <div className="flex items-center space-x-2">
-                <button onClick={handleDecrement2}>-</button>
-                <input type="text" value={quantity2} readOnly className="text-center w-8" />
-                <button onClick={handleIncrement2}>+</button>
-              </div>
-              <p className="font-bold">ยอดรวม: THB {490 * quantity2}.00</p>
-            </div>
+            ))}
           </div>
         </div>
 
         <div className="bg-white rounded-lg p-6 shadow-md">
           <h2 className="text-2xl font-bold mb-4">สรุปคำสั่งซื้อ</h2>
-          <p className="text-gray-700">จำนวนรายการ: 3 รายการ</p>
-          <p className="text-gray-700">รวมมูลค่าสินค้า: THB {390 * quantity1 + 490 * quantity2}.00</p>
+          <p className="text-gray-700">จำนวนรายการ: {items.reduce((sum, item) => sum + item.quantity, 0)} รายการ</p>
+          <p className="text-gray-700">รวมมูลค่าสินค้า: THB {items.reduce((sum, item) => sum + item.price * item.quantity, 0)}.00</p>
           <p className="text-gray-700">ค่าจัดส่ง: THB 40.00</p>
-          <p className="font-bold text-xl mt-4">ราคาทั้งหมด: THB {390 * quantity1 + 490 * quantity2 + 40}.00</p>
+          <p className="font-bold text-xl mt-4">ราคาทั้งหมด: THB {items.reduce((sum, item) => sum + item.price * item.quantity, 0) + 40}.00</p>
 
           <div className="mt-6 space-y-4">
             <button
