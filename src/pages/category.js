@@ -72,17 +72,17 @@ const Category = () => {
           {/* ปุ่ม Back และ Next */}
           <div className="flex space-x-4">
             <a href="#"
-              className="inline-flex items-center px-2 py-1.5 rounded-md text-white hover:bg-indigo-500"
+              className="inline-flex items-center px-2 py-1.5 rounded-md text-white "
             >
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-8 w-8">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
               </svg>
-              <span className="font-bold text-lg">Back</span>
+              <span className="font-bold text-lg"></span>
             </a>
             <a href="#"
-              className="inline-flex items-center px-3 py-1.5 rounded-md text-white hover:bg-indigo-500"
+              className="inline-flex items-center px-3 py-1.5 rounded-md text-white"
             >
-              <span className="font-bold text-lg">Next</span>
+              <span className="font-bold text-lg"></span>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-8 w-8">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
