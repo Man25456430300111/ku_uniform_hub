@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
+import imageku from './images/image_ku.png'; // นำเข้ารูปภาพจากโฟลเดอร์ images
 
 const Cart = () => {
   const [showModal, setShowModal] = useState(false); // สถานะเปิด/ปิดป๊อปอัพแก้ไขที่อยู่
-  const [showPaymentModal, setShowPaymentModal] = useState(false); // สถานะเปิด/ปิดป๊อปอัพการชำระเงิน
+  const [showPaymentModal, setShowPaymentModal] = useState(false); // สถานะเปิด/ป๊อปอัพการชำระเงิน
   const [quantity1, setQuantity1] = useState(1); // จำนวนสินค้าชิ้นแรก
   const [quantity2, setQuantity2] = useState(2); // จำนวนสินค้าชิ้นที่สอง
 
@@ -14,12 +15,39 @@ const Cart = () => {
 
   return (
     <div className="bg-gray-100 min-h-screen">
-      <div className="bg-gradient-to-r from-green-400 to-green-600 p-4 flex items-center justify-between shadow-md">
-        <div className="flex items-center space-x-2">
-          <button className="text-white text-xl font-bold">
-            <i className="fas fa-arrow-left"></i>
-          </button>
-          <span className="text-white text-xl font-bold">KU Uniform Hub</span>
+      <div className="h-screen flex flex-col justify-center items-end text-center"
+        style={{
+          backgroundImage: "url('https://i.pinimg.com/control/564x/1d/a9/6e/1da96e4e4612e509637d17fd725c3416.jpg')",
+          backgroundSize: "100%",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          height: "120px"
+        }}
+      >
+        <div className="flex items-center justify-start p-4 w-full ">
+          <div className="flex justify-start">
+            <img src={imageku} alt="KU Logo" className="w-[200px] h-[100px]" />
+          </div>
+          
+          {/* ปุ่ม Back และ Next */}
+          <div className="flex space-x-4">
+            <a href="#"
+              className="inline-flex items-center  px-2 py-1.5  rounded-md text-white hover:bg-indigo-50"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-8 w-8">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
+              </svg>
+              <span className=" font-bold text-lg"></span>
+            </a>
+            <a href="#"
+              className="inline-flex items-center  px-3 py-1.5  rounded-md text-white hover:bg-indigo-50"
+            >
+              <span className=" font-bold text-lg"></span>
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-8 w-8">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </a>
+          </div>
         </div>
       </div>
 
@@ -33,7 +61,8 @@ const Cart = () => {
             </p>
             <button
               onClick={() => setShowModal(true)} // แสดงป๊อปอัพแก้ไขที่อยู่
-              className="bg-green-500 text-white px-4 py-2 rounded-md mt-2 hover:bg-green-600">
+              className="bg-green-500 text-white px-4 py-2 rounded-md mt-2 hover:bg-green-600"
+            >
               แก้ไข
             </button>
           </div>
@@ -41,7 +70,7 @@ const Cart = () => {
           {/* ป๊อปอัพแก้ไขที่อยู่ */}
           {showModal && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-              <div className="bg-yellow-200 p-8 rounded-lg shadow-lg max-w-3xl w-full grid grid-cols-1 lg:grid-cols-1 gap-8">
+              <div className="bg-yellow-200 p-8 rounded-lg shadow-lg max-w-3xl w-full grid grid-cols-1 gap-8">
                 <div className="flex flex-col items-center justify-center">
                   <h2 className="text-2xl font-bold mb-4 md:self-start md:ml-[117px]">ช่องทางการติดต่อ</h2>
                   <input className="w-2/3 p-3 mb-4 rounded-lg bg-white" placeholder="ชื่อ นามสกุล" />
@@ -51,7 +80,8 @@ const Cart = () => {
                   <input className="w-2/3 p-3 mb-4 rounded-lg bg-white" placeholder="บ้านเลขที่,ซอย,หมู่บ้าน,แถว/ตำบล" />
                   <button
                     onClick={() => setShowModal(false)} // ปิดป๊อปอัพเมื่อกดปุ่ม "ยืนยัน"
-                    className="bg-green-500 text-white w-2/3 p-3 rounded-lg hover:bg-green-600">
+                    className="bg-green-500 text-white w-2/3 p-3 rounded-lg hover:bg-green-600"
+                  >
                     ยืนยัน
                   </button>
                 </div>
@@ -100,9 +130,6 @@ const Cart = () => {
           <p className="text-gray-700">ค่าจัดส่ง: THB 40.00</p>
           <p className="font-bold text-xl mt-4">ราคาทั้งหมด: THB {390 * quantity1 + 490 * quantity2 + 40}.00</p>
 
-          <div className="mt-6 flex items-center space-x-2">
-          </div>
-
           <div className="mt-6 space-y-4">
             <button
               className="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600"
@@ -138,7 +165,9 @@ const Cart = () => {
                   <input type="text" className="block w-full p-2 border rounded" placeholder="xxx" />
                 </div>
               </div>
-              <button type="submit" className="w-full  bg-green-500  text-white p-2 mt-4 rounded">ยืนยันชำระเงิน</button>
+              <button type="submit" className="w-full bg-green-500 text-white p-2 mt-4 rounded">
+                ยืนยันชำระเงิน
+              </button>
             </form>
             <button
               className="absolute top-4 right-4 text-gray-600"
@@ -154,7 +183,3 @@ const Cart = () => {
 };
 
 export default Cart;
-
-
-
-
