@@ -1,22 +1,18 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 import BaseLayout from './BaseLayout';
 import imageku from './images/image_ku.png';
-import axios from 'axios'
-
-
-<link
-  href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap"
-  rel="stylesheet"
-></link>;
+import axios from 'axios';
+import { auth } from '../firebase'; // นำเข้า Firebase
+import { signInWithEmailAndPassword } from 'firebase/auth'; // นำเข้าเมธอดสำหรับการล็อกอิน
 
 function SignIn() {
-
   //------------------sign in----------------------
-  const [usernamesignin, setUsernamesignin] = useState('');
-  const [passwordsignin, setPasswordsignin] = useState('');
-  const [showPasswordsignin, setShowPasswordsignin] = useState(false); // สถานะการแสดงรหัสผ่าน
+  const [usernamesignin, setUsernamesignin] = useState(''); // เก็บอีเมลผู้ใช้
+  const [passwordsignin, setPasswordsignin] = useState(''); // เก็บรหัสผ่านผู้ใช้
+  const [showPasswordsignin, setShowPasswordsignin] = useState(false); // สำหรับการแสดงหรือซ่อนรหัสผ่าน
+  const navigate = useNavigate(); // ใช้เพื่อเปลี่ยนหน้า
 
   const callSignin = async () => {
     // ตรวจสอบว่าได้กรอกข้อมูลทั้งหมดหรือไม่
@@ -30,9 +26,19 @@ function SignIn() {
     }
 
     try {
-      const res = await axios.post("http://localhost:3001/api/signin", {
-        email: usernamesignin,
-        password: passwordsignin
+      // ล็อกอินด้วย Firebase Authentication
+      const userCredential = await signInWithEmailAndPassword(auth, usernamesignin, passwordsignin);
+      const user = userCredential.user;
+
+      // รับ JWT Token จาก Firebase
+      const idToken = await user.getIdToken();
+
+      // แสดง ID Token บน Console เพื่อใช้ทดสอบ
+      console.log('ID Token:', idToken);
+
+      // ส่ง JWT Token ไปยัง Backend เพื่อยืนยันตัวตน
+      const res = await axios.post("http://localhost:4000/api/login", { 
+        idToken: idToken, // ส่ง JWT Token ไปที่ Backend
       });
 
       // จัดการข้อมูลเมื่อเข้าสู่ระบบสำเร็จ
@@ -43,14 +49,14 @@ function SignIn() {
       }).then((result) => {
         if (result.isConfirmed) {
           // นำทางไปที่ User.js
-          navigate('/user'); // เปลี่ยนเส้นทางที่นี่
+          navigate('/home'); // เปลี่ยนเส้นทางไปหน้าถัดไป
         }
       });
 
-
-
     } catch (e) {
-      // จัดการข้อผิดพลาดจากการเข้าสู่ระบบ
+      // แสดงข้อผิดพลาดใน Console เพื่อช่วยวิเคราะห์ปัญหา
+      console.log('Error:', e);
+
       if (e.response) {
         // ตรวจสอบสถานะและแสดงข้อความที่เหมาะสม
         switch (e.response.status) {
@@ -81,81 +87,51 @@ function SignIn() {
     }
   };
 
+  const handleInputChange = (e) => setUsernamesignin(e.target.value); // สำหรับ email
+  const handleInputChange2 = (e) => setPasswordsignin(e.target.value); // สำหรับ password
 
-  const handleInputChange = (e) => {
-    setUsernamesignin(e.target.value);
-  };
-
-  const handleInputChange2 = (e) => {
-    //showpassword sign in
-    setPasswordsignin(e.target.value);
-  };
-
-  const navigate = useNavigate(); // ใช้สำหรับเปลี่ยนหน้า
   const handleSignUpClick = () => navigate('/signup'); // ไปหน้า Sign Up
   const handleForgotPasswordClick = () => navigate('/request-reset-password'); // ไปหน้า Reset Password
 
-  //---------------- sweet alert Sign in ---------------
-  const validateEmail = (email) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(String(email).toLowerCase());
-  };
-
-  const handleSigninsweet = () => {
-    callSignin();
-  };
-
-
   return (
-
     <BaseLayout>
-      <div
-        style={{
-          transform: 'scale(0.8)',
-          transformOrigin: 'center',
-        }}
-      >
-        <div
-          style={{
-            backgroundColor: 'rgba(255, 255, 255, 1)', // กรอบโปร่งแสงสำหรับเนื้อหาฟอร์ม
-            padding: '35px',
-            borderRadius: '20px',
-            boxShadow: '0 0 15px rgba(0, 0, 0, 0.5)',
-            position: 'relative', // เพิ่ม position relative
-            margin: 0,
-          }}
-        >
-                     
-        <img src={imageku} 
-          alt="KU Logo" 
-          style={{
-          position: 'absolute', // จัดให้ภาพอยู่ในตำแหน่งที่แน่นอน
-          bottom:'360px',
-          left: '780px', // ตำแหน่งจากด้านซ้าย
-          width: '366px', 
-          height: '172px',
-          }}
-        />
-
-          <h1
+      <div style={{ transform: 'scale(0.8)', transformOrigin: 'center' }}>
+        <div style={{
+          backgroundColor: 'rgba(255, 255, 255, 1)', // กรอบโปร่งแสงสำหรับเนื้อหาฟอร์ม
+          padding: '35px',
+          borderRadius: '20px',
+          boxShadow: '0 0 15px rgba(0, 0, 0, 0.5)',
+          position: 'relative',
+          margin: 0,
+        }}>
+          <img
+            src={imageku}
+            alt="KU Logo"
             style={{
-              fontFamily: 'Montserrat, sans-serif',
-              fontWeight: 900,
-              fontSize: '28px',
-              marginTop: '0px',
-              color: '#292724',
+              position: 'absolute', // จัดให้ภาพอยู่ในตำแหน่งที่แน่นอน
+              bottom: '360px',
+              left: '780px',
+              width: '366px',
+              height: '172px',
             }}
-          >
+          />
+
+          <h1 style={{
+            fontFamily: 'Montserrat, sans-serif',
+            fontWeight: 900,
+            fontSize: '28px',
+            marginTop: '0px',
+            color: '#292724',
+          }}>
             Sign In
           </h1>
-          <h2
-            style={{
-              fontFamily: 'Montserrat, sans-serif',
-              fontWeight: 700,
-              fontSize: '17px',
-              marginRight: '90%',
-            }}
-          >
+
+          <h2 style={{
+            fontFamily: 'Montserrat, sans-serif',
+            fontWeight: 700,
+            fontSize: '17px',
+            marginRight: '90%',
+          }}>
             Email:
           </h2>
           <input
@@ -175,15 +151,13 @@ function SignIn() {
             }}
           />
 
-          <h2
-            style={{
-              fontFamily: 'Montserrat, sans-serif',
-              fontWeight: 700,
-              fontSize: '17px',
-              marginRight: '90%',
-              marginTop: '20px',
-            }}
-          >
+          <h2 style={{
+            fontFamily: 'Montserrat, sans-serif',
+            fontWeight: 700,
+            fontSize: '17px',
+            marginRight: '90%',
+            marginTop: '20px',
+          }}>
             Password:
           </h2>
           <div style={{ position: 'relative', width: '450px' }}>
@@ -194,7 +168,7 @@ function SignIn() {
               onChange={handleInputChange2}
               style={{
                 padding: '14px',
-                width: '100%', // ใช้ width 100% เพื่อให้พอดีกับ div
+                width: '100%',
                 fontSize: '17px',
                 borderRadius: '12px',
                 fontFamily: 'Montserrat, sans-serif',
@@ -207,35 +181,31 @@ function SignIn() {
               onClick={() => setShowPasswordsignin(!showPasswordsignin)} // เปลี่ยนสถานะเมื่อคลิก
               style={{
                 position: 'absolute',
-                right: '0px', // ปรับตำแหน่งปุ่มให้ไปอยู่ขวา
+                right: '0px',
                 top: '50%',
                 transform: 'translateY(-50%)',
-                background: '#F4EEAD', // สีพื้นหลัง
+                background: '#F4EEAD',
                 border: 'none',
                 color: '#b8811d',
                 cursor: 'pointer',
                 fontFamily: 'Montserrat, sans-serif',
                 fontWeight: 700,
-                fontSize: '15px', // ขนาดฟอนต์
-                width: '50px', // ความกว้าง
-                height: '40px', // ความสูง
-                borderRadius: '8px', // มุมโค้ง
-                display: 'flex', // ใช้ flexbox เพื่อจัดแนวข้อความ
-                alignItems: 'center', // จัดแนวแนวตั้ง
-                justifyContent: 'center', // จัดแนวนอน
+                fontSize: '15px',
+                width: '50px',
+                height: '40px',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
             >
               {showPasswordsignin ? 'Hide' : 'Show'}
             </button>
           </div>
 
-
-
-
-
           <div style={{ marginTop: '35px' }}>
             <button
-              onClick={handleSigninsweet}
+              onClick={callSignin} // แก้ให้ปุ่มเรียกฟังก์ชัน callSignin โดยตรง
               style={{
                 fontFamily: 'Montserrat, sans-serif',
                 fontWeight: 900,
@@ -246,22 +216,19 @@ function SignIn() {
                 background: '#E8B774',
                 color: '#292724',
                 marginTop: '-30px',
-                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', // เพิ่มเงา
-                transition: 'all 0.3s ease', // เพิ่มการเปลี่ยนแปลง
+                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                transition: 'all 0.3s ease',
                 height: '50px',
                 border: 'none',
-                outline: 'none'
-
+                outline: 'none',
               }}
               onMouseOver={(e) => {
-                e.currentTarget.style.boxShadow =
-                  '0 6px 12px rgba(0, 0, 0, 0.3)'; // เพิ่มเงาเมื่อเมาส์อยู่เหนือ
-                e.currentTarget.style.transform = 'translateY(-2px)'; // ยกปุ่มขึ้น
+                e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.3)';
+                e.currentTarget.style.transform = 'translateY(-2px)';
               }}
               onMouseOut={(e) => {
-                e.currentTarget.style.boxShadow =
-                  '0 4px 8px rgba(0, 0, 0, 0.2)'; // กลับเงาเป็นปกติ
-                e.currentTarget.style.transform = 'translateY(0)'; // กลับตำแหน่งปุ่ม
+                e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+                e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
               Sign In
@@ -269,21 +236,20 @@ function SignIn() {
           </div>
         </div>
 
-        <div
-          style={{
-            backgroundColor: 'rgba(255, 255, 255, 1)', // กรอบโปร่งแสงสำหรับเนื้อหาฟอร์ม
-            padding: '35px',
-            borderRadius: '20px',
-            boxShadow: '0 0 15px rgba(0, 0, 0, 0.5)',
-            position: 'relative', // เพิ่ม position relative
-            marginTop: '50px', // เพิ่มระยะห่างจากกล่องข้างบน
-            width: '480px',
-            height: '25px', // ปรับความสูงให้เหมาะสม
-            display: 'flex', // ใช้ flexbox
-            alignItems: 'center', // จัดแนวกลางในแนวตั้ง
-            justifyContent: 'center', // จัดแนวกลางในแนวนอน
-            textAlign: 'center' // จัดการจัดแนวข้อความ
-          }}>
+        <div style={{
+          backgroundColor: 'rgba(255, 255, 255, 1)',
+          padding: '35px',
+          borderRadius: '20px',
+          boxShadow: '0 0 15px rgba(0, 0, 0, 0.5)',
+          position: 'relative',
+          marginTop: '50px',
+          width: '480px',
+          height: '25px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          textAlign: 'center',
+        }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <h3 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: '17px', marginRight: '10px', color: '#a3181a' }}>
               new to Ku Uniform Hub?
@@ -297,10 +263,7 @@ function SignIn() {
           </div>
         </div>
       </div>
-
     </BaseLayout>
-
-
   );
 }
 

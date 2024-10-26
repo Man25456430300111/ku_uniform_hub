@@ -1,108 +1,104 @@
 import React, { useState } from 'react';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
 import BaseLayout from './BaseLayout';
 import imageku from './images/image_ku.png';
+import { auth, db } from '../firebase'; // นำเข้า Firestore และ Firebase Auth
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { doc, setDoc } from 'firebase/firestore'; // นำเข้า Firestore functions
 
 function SignUp() {
-
-    //------------------sign up-----------------------
-    const [firstname, setFirstname] = useState(''); // เพิ่ม state สำหรับ Firstname
-    const [lastname, setLastname] = useState(''); // เพิ่ม state สำหรับ Lastname
+    const [firstname, setFirstname] = useState('');
+    const [lastname, setLastname] = useState('');
     const [usernamesignup, setUsernamesignup] = useState('');
     const [passwordsignup, setPasswordsignup] = useState('');
     const [passwordsignup2, setPasswordsignup2] = useState('');
-    const [showPasswordsignup, setShowPasswordsignup] = useState(false); // สถานะการแสดงรหัสผ่าน
+    const [showPasswordsignup, setShowPasswordsignup] = useState(false);
 
-    const navigate = useNavigate(); // ใช้สำหรับเปลี่ยนหน้า
-    const handleSignInClick = () => navigate('/'); // ไปหน้า Sign In
+    const navigate = useNavigate();
+    const handleSignInClick = () => navigate('/');
 
-
-    const handleFirstnameChange = (e) => {
-        setFirstname(e.target.value);
-    };
-
-    const handleLastnameChange = (e) => {
-        setLastname(e.target.value);
-    };
-
-    const handleInputChangesignup = (e) => {
-        setUsernamesignup(e.target.value);
-    };
-
-    const handleInputChangesignup2 = (e) => {
-        //showpassword sign up
-        setPasswordsignup(e.target.value);
-    };
-
-    const handleInputconfirmpass = (e) => {
-        setPasswordsignup2(e.target.value);
-    };
-
-    // const handleSignup = () => {
-    //     alert(`สวัสดีจร้า Sing up เรียบร้อย, ${usernamesignup}`);
-    // }; 
-
-    //----------------- sweet alert Sign up ----------------
+    const handleFirstnameChange = (e) => setFirstname(e.target.value);
+    const handleLastnameChange = (e) => setLastname(e.target.value);
+    const handleInputChangesignup = (e) => setUsernamesignup(e.target.value);
+    const handleInputChangesignup2 = (e) => setPasswordsignup(e.target.value);
+    const handleInputconfirmpass = (e) => setPasswordsignup2(e.target.value);
 
     const validateEmail = (email) => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(String(email).toLowerCase());
     };
 
-
-    const handleSignupsweet = () => {
-        // ตรวจสอบรบ
-        if (!usernamesignup || !passwordsignup || !passwordsignup2) {
+    const handleSignUp = async () => {
+        if (!usernamesignup || !passwordsignup || !passwordsignup2 || !firstname || !lastname) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Please fill out all the fields!',
+                text: 'กรุณากรอกข้อมูลให้ครบทุกช่อง!',
             });
             return;
         }
-
 
         if (!validateEmail(usernamesignup)) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Invalid email format!',
+                text: 'รูปแบบอีเมลไม่ถูกต้อง!',
             });
             return;
         }
 
-        // ตรวจสอบว่ารหัสผ่านตรงกันมั้ย
         if (passwordsignup !== passwordsignup2) {
             Swal.fire({
                 icon: 'error',
                 title: 'Oops...',
-                text: 'Passwords do not match!',
+                text: 'รหัสผ่านไม่ตรงกัน!',
             });
             return;
         }
 
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, usernamesignup, passwordsignup);
+            const user = userCredential.user;
 
-        Swal.fire({
-            title: 'Signed up successfully!',
-            icon: 'success',
-        });
+            // บันทึกข้อมูลผู้ใช้ลงใน Firestore
+            await setDoc(doc(db, 'users', user.uid), {
+                firstname: firstname,
+                lastname: lastname,
+                email: usernamesignup,
+                createdAt: new Date(),
+            });
+
+            Swal.fire({
+                title: 'สมัครสมาชิกสำเร็จ!',
+                icon: 'success',
+            });
+
+            navigate('/');
+
+        } catch (error) {
+            console.error('Error during signup:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'สมัครสมาชิกไม่สำเร็จ',
+                text: error.message,
+            });
+        }
     };
 
     return (
         <BaseLayout>
-            < div style={{
+            <div style={{
                 transform: 'scale(0.8)',
                 transformOrigin: 'center'
-            }
-            }>
+            }}>
                 <div style={{
-                    backgroundColor: 'rgba(255, 255, 255, 1)', // กรอบโปร่งแสงสำหรับเนื้อหาฟอร์ม
+                    backgroundColor: 'rgba(255, 255, 255, 1)',
                     padding: '35px',
                     borderRadius: '20px',
                     boxShadow: '0 0 15px rgba(0, 0, 0, 0.5)',
-                    position: 'relative', // เพิ่ม position relative
-                    margin:0,
+                    position: 'relative',
+                    margin: 0,
                 }}>
                     <h1 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 900, fontSize: '28px', marginTop: '0px', color: '#292724' }}>Sign Up</h1>
 
@@ -142,7 +138,6 @@ function SignUp() {
                         }}
                     />
 
-
                     <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: '17px', marginRight: '90%' }}>Email:</h2>
                     <input
                         type="email"
@@ -161,31 +156,27 @@ function SignUp() {
                         }}
                     />
 
-                   
-                    
                     <img src={imageku} 
                         alt="KU Logo" 
                         style={{
-                            position: 'absolute', // จัดให้ภาพอยู่ในตำแหน่งที่แน่นอน
+                            position: 'absolute',
                             bottom:'500px',
-                            left: '780px', // ตำแหน่งจากด้านซ้าย
+                            left: '780px',
                             width: '366px', 
                             height: '172px',
                             }}
                     />
-                    
-      
 
                     <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: '17px', marginRight: '90%', marginTop: '20px' }}>Password:</h2>
                     <div style={{ position: 'relative', width: '450px' }}>
                         <input
-                            type={showPasswordsignup ? 'text' : 'password'} // เปลี่ยนเป็น type password ตามสถานะ
+                            type={showPasswordsignup ? 'text' : 'password'}
                             placeholder="Enter your password"
                             value={passwordsignup}
                             onChange={handleInputChangesignup2}
                             style={{
                                 padding: '14px',
-                                width: '100%', // ใช้ width 100% เพื่อให้พอดีกับ div
+                                width: '100%',
                                 fontSize: '17px',
                                 borderRadius: '12px',
                                 fontFamily: 'Montserrat, sans-serif',
@@ -195,39 +186,36 @@ function SignUp() {
                             }}
                         />
 
-
                         <button
-                            onClick={() => setShowPasswordsignup(!showPasswordsignup)} // เปลี่ยนสถานะเมื่อคลิก
+                            onClick={() => setShowPasswordsignup(!showPasswordsignup)}
                             style={{
                                 position: 'absolute',
-                                right: '0px', // ปรับตำแหน่งปุ่มให้ไปอยู่ขวา
+                                right: '0px',
                                 top: '50%',
                                 transform: 'translateY(-50%)',
-                                background: '#F4EEAD', // สีพื้นหลัง
+                                background: '#F4EEAD',
                                 border: 'none',
                                 color: '#b8811d',
                                 cursor: 'pointer',
                                 fontFamily: 'Montserrat, sans-serif',
                                 fontWeight: 700,
-                                fontSize: '15px', // ขนาดฟอนต์
-                                width: '50px', // ความกว้าง
-                                height: '40px', // ความสูง
-                                borderRadius: '8px', // มุมโค้ง
-                                display: 'flex', // ใช้ flexbox เพื่อจัดแนวข้อความ
-                                alignItems: 'center', // จัดแนวแนวตั้ง
-                                justifyContent: 'center' // จัดแนวนอน
+                                fontSize: '15px',
+                                width: '50px',
+                                height: '40px',
+                                borderRadius: '8px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
                             }}
                         >
                             {showPasswordsignup ? 'Hide' : 'Show'}
                         </button>
                     </div>
 
-                    {/* confirm password */}
-
                     <h2 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: '17px', marginRight: '65%', marginTop: '20px' }}>Confirm Password:</h2>
                     <div style={{ position: 'relative', width: '450px' }}>
                         <input
-                            type="password" // เปลี่ยนจาก type="text" เป็น type="password"
+                            type="password"
                             placeholder="Confirm your password"
                             value={passwordsignup2}
                             onChange={handleInputconfirmpass}
@@ -244,10 +232,9 @@ function SignUp() {
                         />
                     </div>
 
-
                     <div style={{ marginTop: '35px' }}>
                         <button
-                            onClick={handleSignupsweet}
+                            onClick={handleSignUp}
                             style={{
                                 fontFamily: 'Montserrat, sans-serif',
                                 fontWeight: 900,
@@ -258,38 +245,39 @@ function SignUp() {
                                 background: '#E8B774',
                                 color: '#292724',
                                 marginTop: '-30px',
-                                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', // เพิ่มเงา
-                                transition: 'all 0.3s ease', // เพิ่มการเปลี่ยนแปลง
+                                boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                                transition: 'all 0.3s ease',
                                 height: '50px',
                                 border: 'none',
                                 outline: 'none'
                             }}
                             onMouseOver={e => {
-                                e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.3)'; // เพิ่มเงาเมื่อเมาส์อยู่เหนือ
-                                e.currentTarget.style.transform = 'translateY(-2px)'; // ยกปุ่มขึ้น
+                                e.currentTarget.style.boxShadow = '0 6px 12px rgba(0, 0, 0, 0.3)';
+                                e.currentTarget.style.transform = 'translateY(-2px)';
                             }}
                             onMouseOut={e => {
-                                e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)'; // กลับเงาเป็นปกติ
-                                e.currentTarget.style.transform = 'translateY(0)'; // กลับตำแหน่งปุ่ม
+                                e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)';
+                                e.currentTarget.style.transform = 'translateY(0)';
                             }}
                         >
                             Sign Up
                         </button>
                     </div>
                 </div>
+
                 <div style={{
-                    backgroundColor: 'rgba(255, 255, 255, 1)', // กรอบโปร่งแสงสำหรับเนื้อหาฟอร์ม
+                    backgroundColor: 'rgba(255, 255, 255, 1)',
                     padding: '35px',
                     borderRadius: '20px',
                     boxShadow: '0 0 15px rgba(0, 0, 0, 0.5)',
-                    position: 'relative', // เพิ่ม position relative
-                    marginTop: '50px', // เพิ่มระยะห่างจากกล่องข้างบน
+                    position: 'relative',
+                    marginTop: '50px',
                     width: '480px',
-                    height: '25px', // ปรับความสูงให้เหมาะสม
-                    display: 'flex', // ใช้ flexbox
-                    alignItems: 'center', // จัดแนวกลางในแนวตั้ง
-                    justifyContent: 'center', // จัดแนวกลางในแนวนอน
-                    textAlign: 'center' // จัดการจัดแนวข้อความ
+                    height: '25px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    textAlign: 'center'
                 }}>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <h3 style={{ fontFamily: 'Montserrat, sans-serif', fontWeight: 700, fontSize: '17px', marginRight: '10px', color: '#a3181a' }}>
@@ -297,18 +285,19 @@ function SignUp() {
                         </h3>
                         <h3
                             style={{ cursor: 'pointer', fontWeight: 'bold', color: '#292724' }}
-                            onClick={handleSignInClick} // เมื่อคลิกจะเปลี่ยนกลับไปหน้า Sign In
+                            onClick={handleSignInClick}
                         >
                             Sign in
                         </h3>
                     </div>
                 </div>
-            </div >
-
+            </div>
         </BaseLayout>
-
     );
-
 }
 
 export default SignUp;
+
+
+
+
