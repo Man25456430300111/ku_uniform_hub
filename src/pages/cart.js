@@ -731,6 +731,7 @@ const Cart = () => {
     { id: 2, name: "เสื้อแขนยาว | The One Concept ชุดนักศึกษาพรีเมี่ยม", price: 490, quantity: 2 }
   ]);
 
+
   // เพิ่ม state สำหรับที่อยู่
   const [address, setAddress] = useState({
     fullName: "นายสมใจ สมจิตร",

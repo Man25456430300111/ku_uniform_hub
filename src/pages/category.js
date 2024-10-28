@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import imageku from './images/image_ku.png'; // นำเข้ารูปภาพจากโฟลเดอร์ images
 import basket from './images/basket.png'; // นำเข้ารูปภาพจากโฟลเดอร์ images
 import search from './images/search.png'; 
+import axios from 'axios';
 
 const Category = () => {
   const navigate = useNavigate(); // Create a navigate function
+  
+  const [cata, setCata] = useState([])
+  const getCategory = async () => {
+    const category = await axios.get('http://localhost:3001/api/category')
+    setCata(category.data.cata)
+  }
+  getCategory()
 
   const handleLogout = () => {
     // Perform any logout logic here, such as clearing tokens or user data
@@ -99,6 +107,15 @@ const Category = () => {
 
         </div>
       </div>
+      { cata && cata.map((data) => {
+        return (
+          <div>
+            <img src={"https://drive.google.com/thumbnail?id=" + data.img} alt={data.name} />
+            <h1>{data.name}</h1>
+            <h2>THB {data.price}</h2>
+          </div>
+        )
+      })}
     </div>
   );
 };
