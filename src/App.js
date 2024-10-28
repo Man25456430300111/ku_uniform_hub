@@ -41,7 +41,7 @@ import Signup from './pages/signup';
 import Category from './pages/category';
 import Product_page from './pages/product_page';
 import Cart from './pages/cart';
-import Checkout from './pages/checkout';
+import { AddProducts } from './pages/addproducts';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import './App.css';
 
@@ -105,10 +105,10 @@ function App() {
           }
         />
         <Route
-          path='/checkout'
+          path='/addProducts'
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <Checkout />
+              <AddProducts />
             </ProtectedRoute>
           }
         />

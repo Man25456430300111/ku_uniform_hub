@@ -27,19 +27,17 @@ function SignIn() {
 
     try {
       // ล็อกอินด้วย Firebase Authentication
-      const userCredential = await signInWithEmailAndPassword(auth, usernamesignin, passwordsignin);
-      const user = userCredential.user;
+      await signInWithEmailAndPassword(auth, usernamesignin, passwordsignin);
+      // const userCredential = await signInWithEmailAndPassword(auth, usernamesignin, passwordsignin);
+      // const user = userCredential.user;
 
-      // รับ JWT Token จาก Firebase
-      const idToken = await user.getIdToken();
+      // // รับ JWT Token จาก Firebase
+      // const idToken = await user.getIdToken();
 
-      // แสดง ID Token บน Console เพื่อใช้ทดสอบ
-      console.log('ID Token:', idToken);
-
-      // ส่ง JWT Token ไปยัง Backend เพื่อยืนยันตัวตน
-      const res = await axios.post("http://localhost:4000/api/login", { 
-        idToken: idToken, // ส่ง JWT Token ไปที่ Backend
-      });
+      // // ส่ง JWT Token ไปยัง Backend เพื่อยืนยันตัวตน
+      // const res = await axios.post("http://localhost:3001/api/login", { 
+      //   idToken: idToken, // ส่ง JWT Token ไปที่ Backend
+      // });
 
       // จัดการข้อมูลเมื่อเข้าสู่ระบบสำเร็จ
       Swal.fire({
