@@ -34,6 +34,7 @@
 
 
 import React, { useEffect, useState } from 'react';
+
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Home from './pages/home';
 import Login from './pages/login';
@@ -41,7 +42,7 @@ import Signup from './pages/signup';
 import Category from './pages/category';
 import Product_page from './pages/product_page';
 import Cart from './pages/cart';
-import { AddProducts } from './pages/addproducts';
+import AddProducts from './pages/addproducts';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import './App.css';
 
@@ -61,6 +62,7 @@ function App() {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
+      console.log('User status:', user); // ตรวจสอบสถานะของผู้ใช้
       setIsAuthenticated(!!user);
     });
 
@@ -105,7 +107,7 @@ function App() {
           }
         />
         <Route
-          path='/addProducts'
+          path='/addproducts'
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated}>
               <AddProducts />
