@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import imageku from './images/image_ku.png'; // นำเข้ารูปภาพจากโฟลเดอร์ images
 import basket from './images/basket.png'; // นำเข้ารูปภาพจากโฟลเดอร์ images
@@ -7,17 +7,23 @@ import axios from 'axios';
 
 const Category = () => {
   const navigate = useNavigate(); // Create a navigate function
+  const [cata, setCata] = useState([]);
 
-  const [cata, setCata] = useState([])
-  const getCategory = async () => {
-    const category = await axios.get('http://localhost:4000/api/category')
-    setCata(category.data.cata)
-  }
-  getCategory()
+  useEffect(() => {
+    const getCategory = async () => {
+      try {
+        const category = await axios.get('http://localhost:4000/api/category');
+        setCata(category.data.cata);
+      } catch (error) {
+        console.error('Error fetching category data:', error);
+      }
+    };
+
+    getCategory(); // เรียกฟังก์ชันเมื่อ component ถูก mount
+  }, []); // [] เพื่อให้ทำงานเพียงครั้งเดียวตอน mount
 
   const handleLogout = () => {
     // Perform any logout logic here, such as clearing tokens or user data
-    // After that, navigate to the Sign-in page
     navigate('/'); // Redirect to the sign-in page (adjust the path if needed)
   };
 
@@ -107,11 +113,11 @@ const Category = () => {
 
         </div>
       </div>
-      {cata && cata.map((data) => {
+      {cata && cata.map((data, index) => {
         console.log(data);
         console.log(data.name);
         return (
-          <div>
+          <div key={index}>
             <img src={data.img} alt={data.name} />
             <h1>{data.name}</h1>
             <h2>THB {data.price}</h2>
