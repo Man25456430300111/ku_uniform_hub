@@ -113,17 +113,17 @@ const Category = () => {
 
         </div>
       </div>
-      {cata && cata.map((data, index) => {
-        console.log(data);
-        console.log(data.name);
-        return (
-          <div key={index}>
-            <img src={data.img} alt={data.name} />
-            <h1>{data.name}</h1>
-            <h2>THB {data.price}</h2>
+      
+      {/* Display categories in a 4-column, 2-row grid */}
+      <div className="grid grid-cols-4 gap-6 p-10">
+        {cata && cata.slice(0, 8).map((data, index) => ( // ใช้ slice(0, 8) เพื่อแสดงเฉพาะ 8 รายการ
+          <div key={index} className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center text-center">
+            <img src={data.img} alt={data.name} className="w-full h-48 object-cover rounded-md mb-4" />
+            <h1 className="font-bold text-lg mb-2">{data.name}</h1>
+            <h2 className="text-gray-700 text-xl">THB {data.price}</h2>
           </div>
-        )
-      })}
+        ))}
+      </div>
     </div>
   );
 };
