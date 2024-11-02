@@ -2,15 +2,15 @@ import React, { useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
 import imageku from './images/image_ku.png'; // นำเข้ารูปภาพจากโฟลเดอร์ images
 import basket from './images/basket.png'; // นำเข้ารูปภาพจากโฟลเดอร์ images
-import search from './images/search.png'; 
+import search from './images/search.png';
 import axios from 'axios';
 
 const Category = () => {
   const navigate = useNavigate(); // Create a navigate function
-  
+
   const [cata, setCata] = useState([])
   const getCategory = async () => {
-    const category = await axios.get('http://localhost:3001/api/category')
+    const category = await axios.get('http://localhost:4000/api/category')
     setCata(category.data.cata)
   }
   getCategory()
@@ -47,14 +47,14 @@ const Category = () => {
 
           {/* Clickable basket image */}
           <img
-            src={basket}  
+            src={basket}
             alt="Cart Icon"
             onClick={goToCart} // Navigate to cart on click
             style={{
               position: 'absolute',
-              bottom:'660px',
+              bottom: '660px',
               left: '1350px',
-              width: '43px', 
+              width: '43px',
               height: '38px',
               objectFit: 'contain',
               cursor: 'pointer' // Make it look clickable
@@ -63,20 +63,20 @@ const Category = () => {
 
           {/* Clickable search image */}
           <img
-            src={search}  
+            src={search}
             alt="Search Icon"
             onClick={goToHome} // Navigate to home on click
             style={{
               position: 'absolute',
-              bottom:'660px',
+              bottom: '660px',
               left: '1280px',
-              width: '43px', 
+              width: '43px',
               height: '38px',
               objectFit: 'contain',
               cursor: 'pointer' // Make it look clickable
             }}
-          />  
-          
+          />
+
           {/* ปุ่ม Back และ Next */}
           <div className="flex space-x-4">
             <a href="#"
@@ -96,7 +96,7 @@ const Category = () => {
               </svg>
             </a>
           </div>
-          
+
           {/* ปุ่ม Logout */}
           <a href="#logout"
             onClick={handleLogout} // Call handleLogout on click
@@ -107,10 +107,12 @@ const Category = () => {
 
         </div>
       </div>
-      { cata && cata.map((data) => {
+      {cata && cata.map((data) => {
+        console.log(data);
+        console.log(data.name);
         return (
           <div>
-            <img src={"https://drive.google.com/thumbnail?id=" + data.img} alt={data.name} />
+            <img src={data.img} alt={data.name} />
             <h1>{data.name}</h1>
             <h2>THB {data.price}</h2>
           </div>
