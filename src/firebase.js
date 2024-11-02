@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth"; // นำเข้า Firebase Authentication
-import { getFirestore } from "firebase/firestore"; // นำเข้า Firestore (ถ้าคุณต้องการใช้ Firestore)
+import { getFirestore, collection, addDoc } from "firebase/firestore"; // นำเข้า Firestore
 import { getAnalytics } from "firebase/analytics";
 
 // Your web app's Firebase configuration
@@ -21,7 +21,18 @@ const analytics = getAnalytics(app);
 
 // Initialize Firebase Authentication and Firestore
 const auth = getAuth(app); // Firebase Authentication
-const db = getFirestore(app); // Firestore (ถ้าคุณต้องการใช้ Firestore)
+const db = getFirestore(app); // Firestore
 
-// Export Authentication and Firestore
-export { auth, db }; // ส่งออก auth และ db เพื่อให้ใช้ในไฟล์อื่นๆ ได้
+// ฟังก์ชันเพิ่มเอกสารในคอลเลกชัน cart
+const addProductToCart = async (userId, product) => {
+  try {
+    const docRef = await addDoc(collection(db, 'carts', userId, 'items'), product);
+    console.log("Document written with ID: ", docRef.id);
+  } catch (e) {
+    console.error("Error adding document: ", e);
+  }
+};
+
+
+// Export Authentication, Firestore และฟังก์ชันเพิ่มผลิตภัณฑ์
+export { auth, db, addProductToCart };

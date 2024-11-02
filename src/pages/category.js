@@ -1,39 +1,55 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate for navigation
-import imageku from './images/image_ku.png'; // นำเข้ารูปภาพจากโฟลเดอร์ images
-import basket from './images/basket.png'; // นำเข้ารูปภาพจากโฟลเดอร์ images
+import { useNavigate } from 'react-router-dom';
+import imageku from './images/image_ku.png';
+import basket from './images/basket.png';
 import search from './images/search.png';
 import axios from 'axios';
+import { addProductToCart } from '../firebase'; // นำเข้าฟังก์ชัน addProductToCart
+import Swal from 'sweetalert2'; // นำเข้า SweetAlert2
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { getAuth } from 'firebase/auth'; // นำเข้า getAuth
+
 
 const Category = () => {
-  const navigate = useNavigate(); // Create a navigate function
+  const navigate = useNavigate();
   const [cata, setCata] = useState([]);
-
+  const auth = getAuth();
   useEffect(() => {
     const getCategory = async () => {
       try {
-        const category = await axios.get('http://localhost:4000/api/category');
+        const category = await axios.get('http://localhost:3001/api/category');
         setCata(category.data.cata);
       } catch (error) {
         console.error('Error fetching category data:', error);
       }
     };
 
-    getCategory(); // เรียกฟังก์ชันเมื่อ component ถูก mount
-  }, []); // [] เพื่อให้ทำงานเพียงครั้งเดียวตอน mount
+    getCategory();
+  }, []);
 
   const handleLogout = () => {
-    // Perform any logout logic here, such as clearing tokens or user data
-    navigate('/'); // Redirect to the sign-in page (adjust the path if needed)
+    navigate('/');
   };
 
   const goToCart = () => {
-    navigate('/cart'); // Navigate to the cart page
+    navigate('/cart');
   };
 
   const goToHome = () => {
-    navigate('/home'); // Navigate to the home page
+    navigate('/home');
   };
+
+  const handleAddToCart = async (product) => {
+    const userId = auth.currentUser.uid; // ใช้ ID ของผู้ใช้ที่ลงชื่อเข้าใช้
+    try {
+        await addProductToCart(userId, product); // ส่ง userId พร้อม product
+        alert(`${product.name} has been added to your cart!`); // แจ้งเตือนการเพิ่มสินค้าสำเร็จ
+    } catch (error) {
+        console.error("Error adding product to cart:", error);
+    }
+};
+
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -51,27 +67,25 @@ const Category = () => {
             <img src={imageku} alt="KU Logo" className="w-[200px] h-[100px]" />
           </div>
 
-          {/* Clickable basket image */}
           <img
             src={basket}
             alt="Cart Icon"
-            onClick={goToCart} // Navigate to cart on click
+            onClick={goToCart}
             style={{
               position: 'absolute',
               bottom: '660px',
-              left: '1350px',
+              left: '1340px',
               width: '43px',
               height: '38px',
               objectFit: 'contain',
-              cursor: 'pointer' // Make it look clickable
+              cursor: 'pointer'
             }}
           />
 
-          {/* Clickable search image */}
           <img
             src={search}
             alt="Search Icon"
-            onClick={goToHome} // Navigate to home on click
+            onClick={goToHome}
             style={{
               position: 'absolute',
               bottom: '660px',
@@ -79,23 +93,18 @@ const Category = () => {
               width: '43px',
               height: '38px',
               objectFit: 'contain',
-              cursor: 'pointer' // Make it look clickable
+              cursor: 'pointer'
             }}
           />
 
-          {/* ปุ่ม Back และ Next */}
           <div className="flex space-x-4">
-            <a href="#"
-              className="inline-flex items-center px-2 py-1.5 rounded-md text-white "
-            >
+            <a href="#" className="inline-flex items-center px-2 py-1.5 rounded-md text-white ">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-8 w-8">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16l-4-4m0 0l4-4m-4 4h18" />
               </svg>
               <span className="font-bold text-lg"></span>
             </a>
-            <a href="#"
-              className="inline-flex items-center px-3 py-1.5 rounded-md text-white"
-            >
+            <a href="#" className="inline-flex items-center px-3 py-1.5 rounded-md text-white">
               <span className="font-bold text-lg"></span>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-8 w-8">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
@@ -103,24 +112,26 @@ const Category = () => {
             </a>
           </div>
 
-          {/* ปุ่ม Logout */}
           <a href="#logout"
-            onClick={handleLogout} // Call handleLogout on click
-            className="absolute top-18 right-8 inline-flex items-center px-4 py-2  text-white rounded-md hover:bg-red-600"
+            onClick={handleLogout}
+            className="absolute top-18 right-8 inline-flex items-center px-4 py-2 text-white rounded-md hover:bg-red-600"
           >
             <span className="font-bold text-lg">Logout</span>
           </a>
-
         </div>
       </div>
-      
-      {/* Display categories in a 4-column, 2-row grid */}
-      <div className="grid grid-cols-4 gap-6 p-10">
-        {cata && cata.slice(0, 8).map((data, index) => ( // ใช้ slice(0, 8) เพื่อแสดงเฉพาะ 8 รายการ
-          <div key={index} className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center text-center">
-            <img src={data.img} alt={data.name} className="w-full h-48 object-cover rounded-md mb-4" />
-            <h1 className="font-bold text-lg mb-2">{data.name}</h1>
-            <h2 className="text-gray-700 text-xl">THB {data.price}</h2>
+
+      <div className="grid grid-cols-3 gap-4 p-4">
+        {cata.map((product) => (
+          <div key={product.name} className="bg-white p-4 rounded-md shadow-md flex flex-col">
+            <img src={product.img} alt={product.name} className="object-cover h-40 w-full rounded-md mb-4" />
+            <h2 className="text-lg font-bold">{product.name}</h2>
+            <p className="text-gray-700">Price: {product.price} baht</p>
+            <button
+              onClick={() => handleAddToCart(product)}
+              className="mt-auto bg-green-500 text-white py-2 rounded-md hover:bg-yellow-600">
+              Add to Cart
+            </button>
           </div>
         ))}
       </div>
