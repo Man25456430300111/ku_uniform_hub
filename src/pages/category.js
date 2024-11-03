@@ -325,16 +325,16 @@ const Category = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-4 p-4">
+      <div className="grid grid-cols-8 gap-4 p-4">
         {cata.map((product) => (
           <div
             key={product.name}
-            className="bg-white p-4 rounded-md shadow-md flex flex-col"
+            className="bg-white p-4 rounded-md shadow-md flex flex-col w-90"
           >
             <img
               src={product.img}
               alt={product.name}
-              className="object-cover h-40 w-full rounded-md mb-4"
+              className="object-cover h-40 w-full rounded-md mb-5 "
             />
             <h2 className="text-lg font-bold">{product.name}</h2>
             <p className="text-gray-700">Price: {product.price} baht</p>

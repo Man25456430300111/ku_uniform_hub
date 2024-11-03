@@ -174,6 +174,7 @@ function SignUp() {
                             placeholder="Enter your password"
                             value={passwordsignup}
                             onChange={handleInputChangesignup2}
+                            onKeyDown={(e) => e.key === ' ' && e.preventDefault()}
                             style={{
                                 padding: '14px',
                                 width: '100%',
@@ -219,6 +220,7 @@ function SignUp() {
                             placeholder="Confirm your password"
                             value={passwordsignup2}
                             onChange={handleInputconfirmpass}
+                            onKeyDown={(e) => e.key === ' ' && e.preventDefault()}
                             style={{
                                 padding: '14px',
                                 width: '450px',
