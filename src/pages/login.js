@@ -47,7 +47,7 @@ function SignIn() {
       }).then((result) => {
         if (result.isConfirmed) {
           // นำทางไปที่ User.js
-          navigate('/home'); // เปลี่ยนเส้นทางไปหน้าถัดไป
+          navigate('/category'); // เปลี่ยนเส้นทางไปหน้าถัดไป
         }
       });
 
