@@ -219,7 +219,7 @@ const Category = () => {
   useEffect(() => {
     const getCategory = async () => {
       try {
-        const category = await axios.get('http://localhost:3001/api/category');
+        const category = await axios.get('http://localhost:4000/api/category');
         setCata(category.data.cata);
       } catch (error) {
         console.error('Error fetching category data:', error);
@@ -254,7 +254,7 @@ const Category = () => {
     const userId = auth.currentUser.uid;
     try {
       // เปลี่ยน endpoint เป็น /api/category และใช้ axios.post
-      await axios.post('http://localhost:3001/api/category', {
+      await axios.post('http://localhost:4000/api/category', {
         userId: userId,
         productName: product.name
       });
