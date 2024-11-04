@@ -65,6 +65,7 @@ function App() {
       console.log('User status:', user); // ตรวจสอบสถานะของผู้ใช้
       setIsAuthenticated(!!user);
     });
+    
 
     return () => unsubscribe();
   }, [auth]);
@@ -120,4 +121,3 @@ function App() {
 }
 
 export default App;
-
