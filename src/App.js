@@ -1,48 +1,9 @@
-// import React from 'react';
-// import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
-// import Home from './pages/home';
-// import Login from './pages/login';
-// import Signup from './pages/signup';
-// import Category from './pages/category';
-// import Product_page from './pages/product_page';
-// import Cart from './pages/cart';
-// import Checkout from './pages/checkout';
-// import SignIn from './pages/login';
-// import './App.css'; 
-
-
-
-// function App() {
-//   return (
-//     <Router>
-      
-//         <Routes>
-//           <Route path='/' element={<SignIn />}/>
-//           <Route path='/signup' element={<Signup />}/>
-//           <Route path="/home" element={<Home />} />
-//           <Route path='/category' element={<Category />}/>
-//           <Route path='/product_page' element={<Product_page />}/>
-//           <Route path='/cart' element={<Cart />}/>
-//           <Route path='/checkout' element={<Checkout />}/>
-//         </Routes>
-//     </Router>
-//   );
-// }
-
-// export default App;
-
-
-
 import React, { useEffect, useState } from 'react';
-
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
-import Home from './pages/home';
 import Login from './pages/login';
 import Signup from './pages/signup';
 import Category from './pages/category';
-import Product_page from './pages/product_page';
 import Cart from './pages/cart';
-import AddProducts from './pages/addproducts';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import './App.css';
 
@@ -75,14 +36,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Login />} />
         <Route path='/signup' element={<Signup />} />
-        <Route
-          path='/home'
-          element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
+        
         <Route
           path='/category'
           element={
@@ -91,14 +45,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path='/product_page'
-          element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <Product_page />
-            </ProtectedRoute>
-          }
-        />
+        
         <Route
           path='/cart'
           element={
@@ -107,14 +54,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route
-          path='/addproducts'
-          element={
-            <ProtectedRoute isAuthenticated={isAuthenticated}>
-              <AddProducts />
-            </ProtectedRoute>
-          }
-        />
+        
       </Routes>
     </Router>
   );
