@@ -219,7 +219,7 @@ const Category = () => {
   useEffect(() => {
     const getCategory = async () => {
       try {
-        const category = await axios.get('http://localhost:3001/api/category');
+        const category = await axios.get('http://localhost:4000/api/category');
         setCata(category.data.cata);
       } catch (error) {
         console.error('Error fetching category data:', error);

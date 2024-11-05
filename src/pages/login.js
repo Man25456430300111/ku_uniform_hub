@@ -6,6 +6,7 @@ import imageku from './images/image_ku.png';
 import axios from 'axios';
 import { auth } from '../firebase'; // นำเข้า Firebase
 import { signInWithEmailAndPassword } from 'firebase/auth'; // นำเข้าเมธอดสำหรับการล็อกอิน
+import { sendPasswordResetEmail } from 'firebase/auth'; // Ensure to import this
 
 function SignIn() {
   //------------------sign in----------------------
@@ -78,8 +79,8 @@ function SignIn() {
         // กรณีไม่มีการตอบสนองจากเซิร์ฟเวอร์
         Swal.fire({
           icon: 'error',
-          title: 'Network Error',
-          text: 'Could not connect to the server. Please check your internet connection.',
+          title: 'Invalid Email or Password',
+          text: 'The email or password you entered is incorrect. Please try again.',
         });
       }
     }
@@ -89,7 +90,32 @@ function SignIn() {
   const handleInputChange2 = (e) => setPasswordsignin(e.target.value); // สำหรับ password
 
   const handleSignUpClick = () => navigate('/signup'); // ไปหน้า Sign Up
-  const handleForgotPasswordClick = () => navigate('/request-reset-password'); // ไปหน้า Reset Password
+  
+
+  const handleForgotPasswordClick = () => {
+    Swal.fire({
+      title: 'Forgot Password',
+      input: 'email',
+      inputLabel: 'Enter your email address',
+      inputPlaceholder: 'Enter your email',
+      showCancelButton: true,
+      confirmButtonText: 'Reset Password',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const email = result.value;
+        if (email) {
+          sendPasswordResetEmail(auth, email)
+            .then(() => {
+              Swal.fire('Success!', 'Password reset email sent successfully!', 'success');
+            })
+            .catch((error) => {
+              Swal.fire('Error!', error.message, 'error');
+            });
+        }
+      }
+    });
+  };
+  
 
   return (
     <BaseLayout>
@@ -113,6 +139,7 @@ function SignIn() {
               height: '172px',
             }}
           />
+
 
           <h1 style={{
             fontFamily: 'Montserrat, sans-serif',
@@ -200,6 +227,11 @@ function SignIn() {
               {showPasswordsignin ? 'Hide' : 'Show'}
             </button>
           </div>
+
+          <div style={{ marginTop: '15px', cursor: 'pointer', color: '#a3181a' }} onClick={handleForgotPasswordClick}>
+            Forgot Password?
+          </div>
+
 
           <div style={{ marginTop: '35px' }}>
             <button
